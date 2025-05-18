@@ -46,6 +46,7 @@ public class GlobalExceptionHandler {
     }
 
 
+
     @ExceptionHandler(RuntimeException.class)
     public Result<?> handleRuntimeException(RuntimeException ex) {
         return Result.failure(500, "运行时异常", ex.getMessage());

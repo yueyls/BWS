@@ -16,7 +16,12 @@ rocketmq:
     group: BWS
     send-message-timeout: 5000
 
-
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.example.project.model
+  configuration:
+    map-underscore-to-camel-case: true
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
 
 server:
-  port: 8081
+  port: 8080

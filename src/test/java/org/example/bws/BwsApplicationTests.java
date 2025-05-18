@@ -1,5 +1,6 @@
 package org.example.bws;
 
+import org.example.bws.infrastructure.mq.producer.WarmMessageProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,9 @@ class BwsApplicationTests {
     @Autowired
     RedisTemplate redisTemplate;
 
+    @Autowired
+    WarmMessageProducer warmMessageProducer;
+
     @Test
     void contextLoads() {
     }
@@ -19,6 +23,15 @@ class BwsApplicationTests {
     void redisTest(){
         redisTemplate.opsForValue().set("now","value");
     }
+
+    @Test
+    void rocketmqTest() throws InterruptedException {
+        warmMessageProducer.sendMessage("warm-message","Test");
+        Thread.sleep(5000);
+    }
+
+
+
 
 
 }
