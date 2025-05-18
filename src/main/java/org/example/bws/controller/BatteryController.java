@@ -3,6 +3,7 @@ package org.example.bws.controller;
 
 import org.example.bws.domain.dto.WarmRequestDto;
 import org.example.bws.domain.dto.WarmResponseDto;
+import org.example.bws.domain.dto.WarnInfoDto;
 import org.example.bws.domain.service.SignalService;
 import org.example.bws.shared.common.Result;
 import org.example.bws.shared.utils.JsonUtils;
@@ -23,10 +24,17 @@ public class BatteryController {
     @Autowired
     SignalService signalService;
 
+
     @PostMapping("/upload")
     public Result<?> handlerWarm(@RequestBody @Valid List<WarmRequestDto> warmRequests) {
         signalService.save(warmRequests);
         return Result.success();
+    }
+
+    @PostMapping("/test")
+    public Result<?> handlerWarmTest(@RequestBody @Valid List<WarmRequestDto> warmRequests) {
+        List<WarnInfoDto> r = signalService.handleWarmSignal(warmRequests);
+        return Result.success(r);
     }
 
 }

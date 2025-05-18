@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="org.example.bws.infrastructure.repository.AlertInfoRepository">
+<mapper namespace="org.example.bws.infrastructure.repository.WarnInfoRepository">
 
     <!-- 定义字段映射 -->
-    <resultMap id="alertInfoMap" type="org.example.bws.domain.model.AlertInfo">
+    <resultMap id="warnInfoMap" type="org.example.bws.domain.model.WarnInfo">
         <id property="id" column="id"/>
         <result property="reportId" column="report_id"/>
         <result property="batteryType" column="battery_type"
@@ -13,20 +13,20 @@
                 javaType="org.example.bws.domain.enums.BatteryType"/>
         <result property="ruleId" column="rule_id"/>
         <result property="ruleName" column="rule_name"/>
-        <result property="alertLevel" column="alert_level"/>
-        <result property="alertTime" column="alert_time"/>
+        <result property="warnLevel" column="warn_level"/>
+        <result property="warnTime" column="warn_time"/>
     </resultMap>
 
     <!-- 批量插入 -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO alert_info (
-        report_id,
+        report_id,t
         car_id,
         battery_type,
         rule_id,
         rule_name,
-        alert_level,
-        alert_time
+        warn_level,
+        warn_time
         ) VALUES
         <foreach collection="list" item="item" separator=",">
             (
@@ -35,17 +35,17 @@
             #{item.batteryType, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             #{item.ruleId},
             #{item.ruleName},
-            #{item.alertLevel},
-            #{item.alertTime}
+            #{item.warnLevel},
+            #{item.warnTime}
             )
         </foreach>
     </insert>
 
     <!-- 按车辆ID查询并排序 -->
-    <select id="selectByCarIdWithSort" resultMap="alertInfoMap">
+    <select id="selectByCarIdWithSort" resultMap="warnInfoMap">
         SELECT * FROM alert_info
         WHERE car_id = #{carId}
-        ORDER BY alert_time DESC
+        ORDER BY warn_time DESC
     </select>
 
 </mapper>

@@ -28,35 +28,27 @@ public class RuleService {
 
 
 
-    public WarnInfoDto handlerSingleRule(int warnId,BatteryType batteryType, SignalVO signalVO){
-        RuleParser ruleParser = new RuleParser();
-        WarnInfoDto tmp=new WarnInfoDto();
-        Rule rule = ruleRepository.selectByRuleId(warnId);
-        AlertRule alertRule = ruleParser.evaluateWarningLevel(rule, signalVO);
-        if(alertRule==null){
-            throw new RuntimeException("没有匹配的规则");
-        }
-        if(alertRule.getWarnLevel()!=-1){
-            tmp.setWarnLevel(alertRule.getWarnLevel());
-            tmp.setBatteryType(rule.getBatteryType());
-            tmp.setWarnName(rule.getRuleName());
-        }
-        return  tmp;
-    }
     //TODO 从缓存获取 规则
-    public List<WarnInfoDto> handlerRule( BatteryType batteryType, SignalVO signalVO){
+    public List<WarnInfoDto> handlerRule( int warnId,BatteryType batteryType, SignalVO signalVO){
         RuleParser ruleParser = new RuleParser();
         List<WarnInfoDto> ret=new ArrayList<>();
-            List<Rule> rules = ruleRepository.selectByBatteryType(batteryType);
-            for (Rule rule : rules) {
-                WarnInfoDto tmp=new WarnInfoDto();
-                AlertRule alertRule = ruleParser.evaluateWarningLevel(rule, signalVO);
-                if(alertRule.getWarnLevel()!=-1){
-                    tmp.setWarnLevel(alertRule.getWarnLevel());
-                    tmp.setBatteryType(rule.getBatteryType());
-                    tmp.setWarnName(rule.getRuleName());
-                    ret.add(tmp);
-                }
+        List<Rule> rules ;
+        if(warnId==0){
+            rules= ruleRepository.selectByBatteryType(batteryType);
+            System.out.println(rules.size());
+        }else{
+            rules=ruleRepository.selectByRuleId(warnId,batteryType);
+            System.out.println(rules.size());
+        }
+        for (Rule rule : rules) {
+            WarnInfoDto tmp=new WarnInfoDto();
+            AlertRule alertRule = ruleParser.evaluateWarningLevel(rule, signalVO);
+            if(alertRule.getWarnLevel()!=-1){
+                tmp.setWarnLevel(alertRule.getWarnLevel());
+                tmp.setBatteryType(rule.getBatteryType());
+                tmp.setWarnName(rule.getRuleName());
+                ret.add(tmp);
+            }
         }
         return ret;
     }

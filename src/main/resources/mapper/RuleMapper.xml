@@ -4,20 +4,17 @@
 
 <mapper namespace="org.example.bws.infrastructure.repository.RuleRepository">
 
-    <!-- 通用结果映射：数据库字段 → 实体类属性 -->
     <resultMap id="BaseResultMap" type="org.example.bws.domain.model.Rule">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="rule_id" property="ruleId" jdbcType="INTEGER"/>
         <result column="rule_name" property="ruleName" jdbcType="VARCHAR"/>
 
-        <!-- 电池类型枚举映射（数据库TINYINT → Java枚举） -->
         <result
             column="battery_type"
             property="batteryType"
             jdbcType="TINYINT"
             typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
 
-        <!-- JSON字段映射：数据库JSON → List<AlertRule> -->
         <result
             column="alert_rules"
             property="alertRules"
@@ -25,7 +22,6 @@
             typeHandler="org.example.bws.infrastructure.handler.JsonListTypeHandler"/>
     </resultMap>
 
-    <!-- 根据rule_id查询 -->
     <select id="selectByRuleId" resultMap="BaseResultMap">
         SELECT
             id,
@@ -34,7 +30,7 @@
             battery_type,
             alert_rules
         FROM rule
-        WHERE rule_id = #{ruleId, jdbcType=INTEGER}
+        WHERE rule_id = #{ruleId, jdbcType=INTEGER} AND battery_type = #{batteryType.value, jdbcType=TINYINT}
     </select>
 
     <!-- 根据电池类型查询 -->
@@ -46,7 +42,7 @@
             battery_type,
             alert_rules
         FROM rule
-        WHERE battery_type = #{batteryType.ordinal(), jdbcType=TINYINT}
+        WHERE battery_type = #{batteryType.value, jdbcType=TINYINT}
     </select>
 
 </mapper>

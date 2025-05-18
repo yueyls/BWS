@@ -1,8 +1,7 @@
 package org.example.bws.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
-import lombok.Setter;
+
 
 public enum BatteryType {
     //有三元电池和铁锂电池两种类型

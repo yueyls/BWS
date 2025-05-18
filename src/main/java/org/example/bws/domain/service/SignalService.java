@@ -50,13 +50,19 @@ public class SignalService {
         }
     }
 
-    public void handleWarmSignal(List<WarmRequestDto> requestDtos){
+    public List<WarnInfoDto> handleWarmSignal(List<WarmRequestDto> requestDtos){
+        List<WarnInfoDto> ret=new ArrayList<>();
         for (WarmRequestDto requestDto : requestDtos) {
-            handleWarmSignal(requestDto);
+            List<WarnInfoDto> warnInfoDtos = handleWarmSignal(requestDto);
+            for (WarnInfoDto warnInfoDto : warnInfoDtos) {
+                ret.add(warnInfoDto);
+            }
         }
+
+        return ret;
     }
 
-    private void handleWarmSignal(WarmRequestDto requestDto){
+    private List<WarnInfoDto> handleWarmSignal(WarmRequestDto requestDto){
         //获取电池类型
         BatteryType batteryType = vehicleRepository.selectBatteryTypeByCarId(requestDto.getCarId());
         //反序列化获取便于RuleService处理的SignalVO
@@ -64,16 +70,11 @@ public class SignalService {
         //处理信号
         int ruleId=requestDto.getWarnId();
 
-        if (ruleId != 0) {
-            WarnInfoDto warnInfoDto = ruleService.handlerSingleRule(ruleId, batteryType, signalVO);
-            if (warnInfoDto == null) {
-                throw new RuntimeException("没有任何的规则匹配");
-            }
-        }else{
-            List<WarnInfoDto> warnInfoDtos=ruleService.handlerRule(batteryType,signalVO);
-            if (warnInfoDtos.isEmpty()){
-                throw new RuntimeException("没有任何的规则匹配");
-            }
+        List<WarnInfoDto> warnInfoDtos=ruleService.handlerRule(ruleId,batteryType,signalVO);
+        if (warnInfoDtos.isEmpty()){
+            throw new RuntimeException("没有任何的规则匹配");
         }
+
+        return  warnInfoDtos;
     }
 }
