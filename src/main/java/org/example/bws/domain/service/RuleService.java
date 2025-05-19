@@ -86,4 +86,13 @@ public class RuleService {
     private String buildCacheKey(int warnId, BatteryType batteryType) {
         return RULE_CACHE_KEY_PREFIX + batteryType.getValue() + ":" + warnId;
     }
+
+    public int insertRule(Rule rule) {
+        int result = ruleRepository.insert(rule);
+
+        String cacheKeyPattern = RULE_CACHE_KEY_PREFIX + rule.getBatteryType().getValue() + ":*";
+        redissonClient.getKeys().deleteByPattern(cacheKeyPattern);
+
+        return result;
+    }
 }

@@ -23,4 +23,6 @@ public interface RuleRepository {
      * @return 符合条件的规则列表
      */
     List<Rule> selectByBatteryType(@Param("batteryType") BatteryType batteryType);
+
+    int insert(Rule rule);
 }

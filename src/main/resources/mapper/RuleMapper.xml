@@ -45,4 +45,18 @@
         WHERE battery_type = #{batteryType.value, jdbcType=TINYINT}
     </select>
 
+    <insert id="insert" parameterType="org.example.bws.domain.model.Rule" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO rule (
+            rule_id,
+            rule_name,
+            battery_type,
+            alert_rules
+        ) VALUES (
+                     #{ruleId, jdbcType=INTEGER},
+                     #{ruleName, jdbcType=VARCHAR},
+                     #{batteryType.value, jdbcType=TINYINT},
+                     #{alertRules, jdbcType=OTHER, typeHandler=org.example.bws.infrastructure.handler.JsonListTypeHandler}
+                 )
+    </insert>
+
 </mapper>
