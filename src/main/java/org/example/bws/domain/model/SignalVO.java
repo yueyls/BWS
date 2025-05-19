@@ -2,6 +2,8 @@ package org.example.bws.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+//不能+全参构造器 如果要 请自己指定处理的JSON序列化器
 public class SignalVO {
     //最大电压
     @JsonProperty("Mx")
@@ -15,6 +17,7 @@ public class SignalVO {
     //最低电流
     @JsonProperty("Ii")
     private Double Ii;
+
 
     @Override
     public String toString() {

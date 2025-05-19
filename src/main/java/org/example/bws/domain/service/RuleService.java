@@ -34,12 +34,13 @@ public class RuleService {
         for (Rule rule : rules) {
             WarnInfoDto tmp = new WarnInfoDto();
             AlertRule alertRule = ruleParser.evaluateWarningLevel(rule, signalVO);
-            if (alertRule.getWarnLevel() != -1) {
-                tmp.setWarnLevel(alertRule.getWarnLevel());
-                tmp.setBatteryType(rule.getBatteryType());
-                tmp.setWarnName(rule.getRuleName());
-                ret.add(tmp);
+            if (alertRule==null){
+                continue;
             }
+            tmp.setWarnLevel(alertRule.getWarnLevel());
+            tmp.setBatteryType(rule.getBatteryType());
+            tmp.setWarnName(rule.getRuleName());
+            ret.add(tmp);
         }
 
         return ret;
@@ -50,8 +51,12 @@ public class RuleService {
 
         RBucket<List<Rule>> bucket = redissonClient.getBucket(cacheKey);
         List<Rule> cachedRules = bucket.get();
+
         if (cachedRules != null && !cachedRules.isEmpty()) {
             System.out.println("cache");
+            for (Rule dbRule : cachedRules) {
+                System.out.println(dbRule);
+            }
             return cachedRules;
         }
 
@@ -64,6 +69,9 @@ public class RuleService {
             dbRules = ruleRepository.selectByRuleId(warnId, batteryType);
         }
 
+        for (Rule dbRule : dbRules) {
+            System.out.println(dbRule);
+        }
         // 如果数据库也无数据，返回空列表避免频繁查库
         if (dbRules == null || dbRules.isEmpty()) {
             return Collections.emptyList();

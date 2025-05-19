@@ -3,6 +3,7 @@ package org.example.bws.utilsTest;
 
 import org.example.bws.domain.model.AlertRule;
 import org.example.bws.domain.model.Rule;
+import org.example.bws.domain.model.SignalVO;
 import org.example.bws.shared.utils.RuleParser;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

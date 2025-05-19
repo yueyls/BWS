@@ -59,7 +59,7 @@ public class RuleParser {
 
                 //跳过
                 if (shouldSkip) {
-                    break;
+                    continue;
                 }
 
                 if (evaluator.evaluate(alertRule.getCondition(), variables)) {

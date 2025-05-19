@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author 刘仁杰
@@ -44,7 +45,9 @@ public class BatteryController {
     @GetMapping("/query")
     public Result<?> handlerWarmQuery(@RequestParam int carId) {
         List<WarnInfoDto> byCarId = warnInfoService.findByCarId(carId);
-        return Result.success(byCarId);
+        List<WarnInfoDto> collect = byCarId.stream().filter(w -> w.getWarnLevel() != -1)
+                .collect(Collectors.toList());
+        return Result.success(collect);
     }
 
 //    @GetMapping("/querysignal")

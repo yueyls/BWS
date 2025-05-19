@@ -82,11 +82,12 @@ public class SignalService {
         int ruleId=signalReport.getWarnId();
 
         List<WarnInfoDto> warnInfoDtos=ruleService.handlerRule(ruleId,batteryType,signalReport.getSignalData());
-        if (warnInfoDtos.isEmpty()){
-            throw new RuntimeException("没有任何的规则匹配");
-        }
+//        if (warnInfoDtos.isEmpty()){
+//            throw new RuntimeException("没有任何的规则匹配");
+//        }
 
-        return  warnInfoDtos;
+        System.out.println(warnInfoDtos.size());
+        return warnInfoDtos;
     }
 
 

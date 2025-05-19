@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class WarmMessageConsumer implements RocketMQListener<String> {
 
     private static final String REDIS_KEY_PREFIX = "signal:processed:";
-    private static final int REDIS_KEY_EXPIRE_MINUTES = 10;
+    private static final int REDIS_KEY_EXPIRE_MINUTES = 100;
     private static final Logger log = LoggerFactory.getLogger(WarmMessageConsumer.class);
 
     @Autowired
@@ -119,6 +119,9 @@ public class WarmMessageConsumer implements RocketMQListener<String> {
             log.debug("转换后的告警信息: {}", warnInfo);
         }
 
+        if (warnInfoDtos.isEmpty()){
+            return ;
+        }
         warnInfoRepository.batchInsert(warnInfos);
     }
 }
