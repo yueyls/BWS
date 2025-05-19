@@ -11,10 +11,12 @@ import org.example.bws.domain.dto.WarnInfoDto;
 import org.example.bws.domain.model.SignalReport;
 import org.example.bws.domain.model.WarnInfo;
 import org.example.bws.domain.service.SignalService;
+import org.example.bws.infrastructure.repository.BufferedLogSaver;
 import org.example.bws.infrastructure.repository.WarnInfoRepository;
 import org.example.bws.shared.event.SignalProcessedEvent;
 import org.example.bws.shared.utils.DtoToModelConverter;
 import org.redisson.api.RBucket;
+import org.redisson.api.RExecutorService;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,9 +46,16 @@ public class WarmMessageConsumer implements RocketMQListener<String> {
     private static final String REDIS_KEY_PREFIX = "signal:processed:";
     private static final int REDIS_KEY_EXPIRE_MINUTES = 100;
     private static final Logger log = LoggerFactory.getLogger(WarmMessageConsumer.class);
+    private static final String WARN_INFO_CACHE_KEY_PREFIX = "warn_info:car_id:";
+    private static final long DELAY_SECONDS_AFTER_WRITE = 5;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+
+    @Autowired
+    private BufferedLogSaver logSaver;
 
     @Autowired
     private SignalService signalService;
@@ -104,6 +115,16 @@ public class WarmMessageConsumer implements RocketMQListener<String> {
     }
 
     private void processSignal(SignalReport signalReport) {
+        int carId = signalReport.getCarId();
+        String cacheKey = WARN_INFO_CACHE_KEY_PREFIX + carId;
+
+        try {
+            redissonClient.getBucket(cacheKey).delete();
+            log.info("第一次删除缓存 key={}", cacheKey);
+        } catch (Exception e) {
+            log.warn("删除缓存失败 key={}", cacheKey, e);
+        }
+
         List<WarnInfoDto> warnInfoDtos = signalService.handleSignalReport(signalReport);
         List<WarnInfo> warnInfos = new ArrayList<>();
 
@@ -119,9 +140,25 @@ public class WarmMessageConsumer implements RocketMQListener<String> {
             log.debug("转换后的告警信息: {}", warnInfo);
         }
 
-        if (warnInfoDtos.isEmpty()){
-            return ;
+        if (warnInfoDtos.isEmpty()) {
+            return;
         }
+
         warnInfoRepository.batchInsert(warnInfos);
+
+        // 替换后的代码
+        scheduler.schedule(() -> {
+            try {
+                redissonClient.getBucket(cacheKey).delete();
+                log.info("延迟 {} 秒后再次删除缓存 key={}", DELAY_SECONDS_AFTER_WRITE, cacheKey);
+            } catch (Exception e) {
+                log.warn("延迟删除缓存失败", e);
+            }
+        }, DELAY_SECONDS_AFTER_WRITE, TimeUnit.SECONDS);
+        try {
+            warnInfos.forEach(logSaver::save);
+        } catch (Exception e) {
+            log.warn("日志记录失败");
+        }
     }
 }

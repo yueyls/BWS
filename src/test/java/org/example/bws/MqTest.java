@@ -39,7 +39,6 @@ public class MqTest {
             // 发送到消息队列
             warmMessageProducer.sendMessage("warm-message", json);
         }
-
         Thread.sleep(5000);
     }
 

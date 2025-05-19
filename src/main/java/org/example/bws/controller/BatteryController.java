@@ -1,6 +1,7 @@
 package org.example.bws.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.bws.domain.dto.WarmRequestDto;
 import org.example.bws.domain.dto.WarmResponseDto;
 import org.example.bws.domain.dto.WarnInfoDto;
@@ -43,11 +44,10 @@ public class BatteryController {
     }
 
     @GetMapping("/query")
-    public Result<?> handlerWarmQuery(@RequestParam int carId) {
+    public Result<?> handlerWarmQuery(@RequestParam int carId) throws JsonProcessingException {
         List<WarnInfoDto> byCarId = warnInfoService.findByCarId(carId);
-        List<WarnInfoDto> collect = byCarId.stream().filter(w -> w.getWarnLevel() != -1)
-                .collect(Collectors.toList());
-        return Result.success(collect);
+
+        return Result.success(byCarId);
     }
 
 //    @GetMapping("/querysignal")

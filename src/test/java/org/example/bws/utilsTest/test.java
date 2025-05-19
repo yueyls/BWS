@@ -5,13 +5,20 @@ import org.example.bws.domain.model.AlertRule;
 import org.example.bws.domain.model.Rule;
 import org.example.bws.domain.model.SignalVO;
 import org.example.bws.shared.utils.RuleParser;
+import org.hibernate.validator.internal.constraintvalidators.bv.AssertTrueValidator;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 
+import static org.springframework.test.util.AssertionErrors.assertTrue;
+
 @SpringBootTest
 public class test {
+
+    @Autowired
+    private AssertTrueValidator assertTrueValidator;
 
     @Test
     public void test() {
@@ -25,7 +32,7 @@ public class test {
         RuleParser parser = new RuleParser();
 //        int warnLevel = parser.evaluateWarningLevel(rule, 6.0, 3.0,0.0,0.0);
         AlertRule alertRule = parser.evaluateWarningLevel(rule, 0.0, 0.0, 12.0, 11.7);
-        System.out.println(alertRule.getWarnLevel());
+        assertTrue("警告级别应为1", alertRule != null && alertRule.getWarnLevel() == 1);
     }
 
 }
