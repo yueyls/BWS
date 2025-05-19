@@ -5,11 +5,41 @@ import java.time.LocalDateTime;
 public class SignalReport {
     private Long id;
     private int carId;
+    private int warnId;
     private LocalDateTime reportTime;
     private SignalVO signalData;
     private Boolean isHandled;
 
+    public SignalReport() {}
 
+    @Override
+    public String toString() {
+        return "SignalReport{" +
+                "id=" + id +
+                ", carId=" + carId +
+                ", warnId=" + warnId +
+                ", reportTime=" + reportTime +
+                ", signalData=" + signalData +
+                ", isHandled=" + isHandled +
+                '}';
+    }
+
+    public SignalReport(Long id, int warnId, int carId, LocalDateTime reportTime, SignalVO signalData, Boolean isHandled) {
+        this.id = id;
+        this.warnId = warnId;
+        this.carId = carId;
+        this.reportTime = reportTime;
+        this.signalData = signalData;
+        this.isHandled = isHandled;
+    }
+
+    public int getWarnId() {
+        return warnId;
+    }
+
+    public void setWarnId(int warnId) {
+        this.warnId = warnId;
+    }
 
     public Boolean getIsHandled() {
         return isHandled;

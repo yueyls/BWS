@@ -12,8 +12,10 @@ public interface SignalReportRepository {
     int batchInsert(@Param("list") List<SignalReport> reports);
 
     // 根据处理状态查询
-    List<SignalReport> selectByHandledStatus(@Param("handled") Boolean isHandled);
+    List<SignalReport> selectByHandledStatus(@Param("isHandled") Boolean isHandled);
 
     // 根据ID标记为已处理
     int markAsHandled(@Param("id") Long id);
+
+    void markAllAsHandled(@Param("ids") List<Long> ids);
 }

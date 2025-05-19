@@ -13,10 +13,13 @@ import java.sql.SQLException;
 public class JacksonTypeHandler<T> extends BaseTypeHandler<T> {
 
     private final Class<T> type;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper ;
 
-    public JacksonTypeHandler(Class<T> type) {
+
+
+    public JacksonTypeHandler(Class<T> type, ObjectMapper objectMapper) {
         this.type = type;
+        this.objectMapper = objectMapper;
     }
 
     @Override

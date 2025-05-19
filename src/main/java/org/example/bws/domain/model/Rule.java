@@ -19,6 +19,17 @@ public class Rule {
     @JsonProperty("alert_rules")
     private List<AlertRule> alertRules;
 
+    @Override
+    public String toString() {
+        return "Rule{" +
+                "id=" + id +
+                ", ruleId=" + ruleId +
+                ", ruleName='" + ruleName + '\'' +
+                ", batteryType=" + batteryType +
+                ", alertRules=" + alertRules +
+                '}';
+    }
+
     public Rule() {}
 
     public Rule(int id,int ruleId, String ruleName, BatteryType batteryType, List<AlertRule> alertRules) {

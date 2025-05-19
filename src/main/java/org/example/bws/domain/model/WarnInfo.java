@@ -30,6 +30,20 @@ public class WarnInfo {
         this.warnTime = warnTime;
     }
 
+    @Override
+    public String toString() {
+        return "WarnInfo{" +
+                "id=" + id +
+                ", reportId=" + reportId +
+                ", carId=" + carId +
+                ", batteryType=" + batteryType +
+                ", ruleId=" + ruleId +
+                ", ruleName='" + ruleName + '\'' +
+                ", warnLevel=" + warnLevel +
+                ", warnTime=" + warnTime +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

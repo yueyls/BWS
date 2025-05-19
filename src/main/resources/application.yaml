@@ -7,8 +7,14 @@ spring:
   redis:
     host: 101.132.151.45
     port: 6379
+    redisson:
+      config: |
+        singleServerConfig:
+          address: redis://101.132.151.45:6379          
+          timeout: 3000
   application:
     name: BWS
+
 
 rocketmq:
   name-server: 101.132.151.45:9876

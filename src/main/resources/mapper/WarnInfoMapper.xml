@@ -19,8 +19,8 @@
 
     <!-- 批量插入 -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO alert_info (
-        report_id,t
+        INSERT INTO warn_info (
+        report_id,
         car_id,
         battery_type,
         rule_id,
@@ -43,7 +43,7 @@
 
     <!-- 按车辆ID查询并排序 -->
     <select id="selectByCarIdWithSort" resultMap="warnInfoMap">
-        SELECT * FROM alert_info
+        SELECT * FROM warn_info
         WHERE car_id = #{carId}
         ORDER BY warn_time DESC
     </select>

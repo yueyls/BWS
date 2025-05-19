@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-@MappedTypes(List.class)       // 映射Java类型
+@MappedTypes(List.class)
 @MappedJdbcTypes(JdbcType.OTHER) // 映射JDBC类型（对应数据库JSON类型）
 public class JsonListTypeHandler extends BaseTypeHandler<List<AlertRule>> {
 

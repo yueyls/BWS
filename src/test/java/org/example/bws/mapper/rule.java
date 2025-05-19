@@ -25,11 +25,11 @@ public class rule {
 
     @Test
     void test(){
-        Rule rule = ruleRepository.selectByRuleId(1);
-        System.out.println(rule.getRuleName());
-        System.out.println(rule.getBatteryType());
-        List<AlertRule> alertRules = rule.getAlertRules();
-        alertRules.forEach((r)-> System.out.println(r.getCondition()));
+        List<Rule> rule = ruleRepository.selectByRuleId(1,BatteryType.LITHIUM_IRON_PHOSPHATE);
+//        System.out.println(rule.getRuleName());
+//        System.out.println(rule.getBatteryType());
+//        List<AlertRule> alertRules = rule.getAlertRules();
+//        alertRules.forEach((r)-> System.out.println(r.getCondition()));
     }
 
 

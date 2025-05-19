@@ -8,22 +8,24 @@
     <resultMap id="signalReportMap" type="org.example.bws.domain.model.SignalReport">
         <id property="id" column="id"/>
         <result property="carId" column="car_id"/>
+        <result property="warnId" column="warn_id"/>
         <result property="reportTime" column="report_time"/>
         <result property="signalData" column="signal_data"
-                typeHandler="org.example.bws.shared.utils.JacksonTypeHandler"/>
+                typeHandler="org.example.bws.shared.utils.SignalVOTypeHandler"/>
         <!-- 明确指定 Java 属性名与数据库列名的对应关系 -->
         <result property="isHandled" column="is_handled"/>
     </resultMap>
 
     <!-- 批量插入 -->
     <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO signal_report (car_id, report_time, signal_data, is_handled)
+        INSERT INTO signal_report (car_id,warn_id, report_time, signal_data, is_handled)
         VALUES
         <foreach collection="list" item="item" separator=",">
             (
             #{item.carId},
+            #{item.warnId},
             #{item.reportTime},
-            #{item.signalData, typeHandler=org.example.bws.shared.utils.JacksonTypeHandler},
+            #{item.signalData, typeHandler=org.example.bws.shared.utils.SignalVOTypeHandler},
             #{item.isHandled}
             )
         </foreach>
@@ -42,4 +44,14 @@
         WHERE id = #{id}
     </update>
 
+
+    <!-- 批量标记为已处理 -->
+    <update id="markAllAsHandled">
+        UPDATE signal_report
+        SET is_handled = 1
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

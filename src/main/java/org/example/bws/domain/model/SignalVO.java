@@ -16,6 +16,16 @@ public class SignalVO {
     @JsonProperty("Ii")
     private Double Ii;
 
+    @Override
+    public String toString() {
+        return "SignalVO{" +
+                "Mx=" + Mx +
+                ", Mi=" + Mi +
+                ", Ix=" + Ix +
+                ", Ii=" + Ii +
+                '}';
+    }
+
     public Double getMi() {
         return Mi;
     }

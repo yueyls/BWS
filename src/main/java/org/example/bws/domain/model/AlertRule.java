@@ -11,6 +11,14 @@ public class AlertRule {
         this.warnLevel = warnLevel;
     }
 
+    @Override
+    public String toString() {
+        return "AlertRule{" +
+                "condition='" + condition + '\'' +
+                ", warnLevel=" + warnLevel +
+                '}';
+    }
+
     public String getCondition() { return condition; }
     public void setCondition(String condition) { this.condition = condition; }
     public int getWarnLevel() { return warnLevel; }

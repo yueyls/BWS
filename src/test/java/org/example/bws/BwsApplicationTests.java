@@ -2,7 +2,10 @@ package org.example.bws;
 
 import org.example.bws.infrastructure.mq.producer.WarmMessageProducer;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -10,7 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 class BwsApplicationTests {
 
     @Autowired
-    RedisTemplate redisTemplate;
+    RedissonClient redissonClient;
 
     @Autowired
     WarmMessageProducer warmMessageProducer;
@@ -21,7 +24,8 @@ class BwsApplicationTests {
 
     @Test
     void redisTest(){
-        redisTemplate.opsForValue().set("now","value");
+        RBucket<Object> key = redissonClient.getBucket("key");
+        key.set(1);
     }
 
     @Test
