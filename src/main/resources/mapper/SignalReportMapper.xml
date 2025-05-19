@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.bws.infrastructure.repository.SignalReportRepository">
+
+    <!-- 定义字段映射（解决下划线与驼峰式命名转换） -->
+    <resultMap id="signalReportMap" type="org.example.bws.domain.model.SignalReport">
+        <id property="id" column="id"/>
+        <result property="carId" column="car_id"/>
+        <result property="warnId" column="warn_id"/>
+        <result property="reportTime" column="report_time"/>
+        <result property="signalData" column="signal_data"
+                typeHandler="org.example.bws.shared.utils.SignalVOTypeHandler"/>
+        <!-- 明确指定 Java 属性名与数据库列名的对应关系 -->
+        <result property="isHandled" column="is_handled"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO signal_report (car_id,warn_id, report_time, signal_data, is_handled)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.carId},
+            #{item.warnId},
+            #{item.reportTime},
+            #{item.signalData, typeHandler=org.example.bws.shared.utils.SignalVOTypeHandler},
+            #{item.isHandled}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 根据处理状态查询 -->
+    <select id="selectByHandledStatus" resultMap="signalReportMap">
+        SELECT * FROM signal_report
+        WHERE is_handled = #{isHandled}
+    </select>
+
+    <!-- 标记为已处理 -->
+    <update id="markAsHandled">
+        UPDATE signal_report
+        SET is_handled = 1
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 批量标记为已处理 -->
+    <update id="markAllAsHandled">
+        UPDATE signal_report
+        SET is_handled = 1
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
