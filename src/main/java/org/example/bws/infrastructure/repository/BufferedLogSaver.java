@@ -30,6 +30,7 @@ public class BufferedLogSaver {
 
     private ObjectMapper mapper;
 
+
     @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.mapper = objectMapper.registerModule(new JavaTimeModule());

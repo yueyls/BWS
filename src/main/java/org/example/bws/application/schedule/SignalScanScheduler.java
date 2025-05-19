@@ -39,8 +39,8 @@ public class SignalScanScheduler {
 
 //    // 每天凌晨1点执行定时扫描
 //    @Scheduled(cron = "0 0 1 * * ?")
-// 在应用启动后，延迟 1 秒执行第一次，之后每半小时执行一次
-    @Scheduled(initialDelay = 1000, fixedRate = 1800000)
+// 在应用启动后，延迟 1 秒执行第一次，之后每五分钟执行一次
+    @Scheduled(initialDelay = 1000, fixedRate = 300000)
     public void scanAndProduceSignals() {
         System.out.println("------------");
         try {
